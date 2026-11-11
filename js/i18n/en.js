@@ -46,7 +46,6 @@ export default {
   "ui.spaceMouseNote": "By default the puck moves the model, like the 3Dconnexion driver does. The browser reads the puck directly, so the driver's own speed and reversed axes don't apply here. Set them here instead.",
   "ui.controlsHint": "Left drag: orbit  ·  Right drag: pan  ·  Scroll: zoom",
   "ui.meshInfo": "{n} triangles · {mb} MB · {sx} × {sy} × {sz} mm",
-  "ui.meshInfoExport": "~{n} triangles after export",
   "ui.loadStl": "Load Model…",
   "ui.localProcessingNote": "All processing runs locally in your browser — no data is uploaded.",
   "sections.displacementMap": "Displacement Map",

@@ -203,11 +203,6 @@ main,
     align-content: center;
   }
 
-  .mesh-info {
-    flex: 1 1 100%;
-    min-width: 0;
-    font-size: 10px;
-  }
 
   .wireframe-toggle {
     min-height: 30px;

@@ -355,12 +355,6 @@ main { direction: ltr; }
   flex-shrink: 0;
 }
 
-.mesh-info {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
 .viewport-controls-hint {
   margin-left: auto;
   font-size: 11px;
