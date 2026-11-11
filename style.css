@@ -191,6 +191,13 @@ main {
   overflow: hidden;
 }
 
+/* Keep the application layout direction stable in Hebrew. RTL belongs to the
+   controls and text inside each pane, not to the flex layout that positions panes. */
+main { direction: ltr; }
+[dir="rtl"] #viewport-section,
+[dir="rtl"] #settings-panel,
+[dir="rtl"] .gallery-panel { direction: rtl; }
+
 /* ── 3-D Viewport section ────────────────────────────────────────────── */
 #brush-cursor {
   display: none;
