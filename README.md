@@ -1,2 +1,2 @@
-**Live:** https://bumpmesh.com  
-**GitHub:** https://yanai-lez.github.io/Stl-Texture/
+**Live:** https://yanai-lez.github.io/Stl-Texture/  
+**GitHub:** https://github.com/Yanai-lez/Stl-Texture  
