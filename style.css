@@ -3348,3 +3348,34 @@ input[type="number"].val:focus { outline: none; border-color: var(--accent); }
   #settings-panel button,
   .gallery-panel button { padding-inline: 6px; font-size: 11px; }
 }
+
+/* Hebrew right-to-left layout */
+html[dir="rtl"] { direction: rtl; text-align: right; }
+html[dir="rtl"] header, html[dir="rtl"] .header-actions, html[dir="rtl"] .project-io { direction: rtl; }
+html[dir="rtl"] main { flex-direction: row-reverse; }
+html[dir="rtl"] #settings-panel, html[dir="rtl"] .gallery-panel { border-left: 0; border-right: 1px solid var(--border); }
+html[dir="rtl"] .sidebar-toggle { right: auto; left: var(--sidebar-w); border: 1px solid var(--border); border-left: 0; border-radius: 0 var(--radius) var(--radius) 0; }
+html[dir="rtl"] main.sidebar-collapsed .sidebar-toggle { left: 0; }
+html[dir="rtl"] .panel-section, html[dir="rtl"] .form-row, html[dir="rtl"] .panel-subsection-heading { text-align: right; }
+html[dir="rtl"] .form-row { direction: rtl; }
+html[dir="rtl"] .export-dialog { right: auto; left: 0; text-align: right; }
+html[dir="rtl"] .viewport-controls-hint { margin-left: 0; margin-right: auto; }
+html[dir="rtl"] .mesh-info { direction: ltr; }
+@media (max-width: 699px) {
+  .load-stl-row, .export-buttons, .map-actions, .excl-tools, .excl-mode-row, .excl-footer, .step-dialog-actions {
+    display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; width: 100%; min-width: 0; max-width: 100%;
+  }
+  .load-stl-row > *, .export-buttons > *, .map-actions > *, .excl-tools > *, .excl-mode-row > *, .excl-footer > *, .step-dialog-actions > * {
+    width: 100%; min-width: 0; max-width: 100%; flex: initial; box-sizing: border-box; white-space: normal; overflow-wrap: anywhere;
+  }
+  #settings-panel button, .gallery-panel button, #settings-panel .upload-btn, .gallery-panel .upload-btn, #settings-panel .place-on-face-btn, .gallery-panel .place-on-face-btn {
+    min-width: 0; max-width: 100%; height: auto; min-height: 42px; padding: 8px 7px; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; box-sizing: border-box;
+  }
+  .form-row > button, .form-row > .upload-btn, .form-row > .place-on-face-btn { flex: 1 1 calc(50% - 8px); }
+}
+@media (max-width: 699px) and (orientation: landscape) {
+ html[dir="rtl"] main { flex-direction: row-reverse; }
+ html[dir="rtl"] #settings-panel, html[dir="rtl"] .gallery-panel { border-right: 1px solid var(--border); }
+ html[dir="rtl"] .sidebar-toggle { right: auto; left: min(46vw,340px); border: 1px solid var(--border); border-left: 0; border-radius: 0 var(--radius) var(--radius) 0; }
+ html[dir="rtl"] main.sidebar-collapsed .sidebar-toggle { left: 0; }
+}
