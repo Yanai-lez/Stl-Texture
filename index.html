@@ -708,8 +708,6 @@
           <button id="export-3mf-btn" class="export-btn" disabled data-i18n="ui.export3mf" data-i18n-title="tooltips.export3mf" title="Smaller file size — may not be accepted by all slicers">Export 3MF</button>
         </div>
       </section>
-
-      <button id="welcome-link" class="license-link">What&rsquo;s New</button>
     </aside>
 
     <!-- Texture gallery (filled by js/textureGallery.js). Takes the settings panel's place while open
@@ -774,42 +772,6 @@
     </div>
   </div>
 
-  <!-- Original author information dialogs removed from the customized interface. -->
-
-  <!-- Welcome / What's New popup -->
-  <div id="welcome-overlay" class="welcome-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-    <div class="welcome-modal">
-      <button id="welcome-close" class="license-close-btn" aria-label="Close">&#215;</button>
-      <h2 id="welcome-title">Welcome to STL Texture</h2>
-      <p class="welcome-tagline">Add a texture to any of your STLs &mdash; directly in your browser, no cloud and completely free!</p>
-
-      <h3 class="welcome-heading">Quick start</h3>
-      <ol class="welcome-steps">
-        <li>Import an STL, OBJ, 3MF or STEP.</li>
-        <li>Pick a texture from the preset library or upload your own image.</li>
-        <li>Tweak amplitude, scale, and mapping mode to taste.</li>
-        <li>Export as STL or 3MF.</li>
-      </ol>
-
-      <h3 class="welcome-heading">New in this release <span class="welcome-date">&mdash; November 2026</span></h3>
-      <!-- Add each release to changelog.html as well, which keeps the full history. -->
-      <ul class="welcome-changelog">
-        <li><strong>New in v1.5.2</strong> &mdash; textures run right up to edges next to untextured faces, a new <strong>Outline wrap</strong> projection, SpaceMouse speed and reverse settings, and Czech.</li>
-        <li><strong>v1.5.1</strong> &mdash; brush strokes no longer turn into a camera orbit when another mouse button is tapped, and switching between Include and Exclude keeps your brush.</li>
-        <li><strong>v1.5.0</strong> &mdash; <strong>Stamp mode</strong> (under Projection) places a texture once instead of tiling it, for logos, badges and labels.</li>
-        <li><strong>v1.4.3</strong> &mdash; five <strong>tire treads</strong> in a new Tires category, and the <a href="changelog.html" target="_blank" rel="noopener">full changelog</a>.</li>
-        <li><strong>v1.4.2</strong> &mdash; <strong>3Dconnexion SpaceMouse</strong> support, thanks to Alon Mishne, and a Standard circle brush that marks whole triangles.</li>
-      </ul>
-      <a class="welcome-history-link" href="changelog.html" target="_blank" rel="noopener">See all past updates &rarr;</a>
-
-      <label class="sponsor-no-show">
-        <input type="checkbox" id="welcome-dont-show" />
-        <span>Don&rsquo;t show this again until there&rsquo;s something new</span>
-      </label>
-      <button id="welcome-got-it" class="sponsor-close-btn">Got it</button>
-    </div>
-  </div>
-
-  <script type="module" src="js/main.js"></script>
+  <!-- Original author information dialogs removed from the customized interface. --><script type="module" src="js/main.js"></script>
 </body>
 </html>
