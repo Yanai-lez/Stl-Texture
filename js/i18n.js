@@ -11,6 +11,7 @@ export const TRANSLATIONS = {
   da: { 'lang.name': 'Dansk' },
   de: { 'lang.name': 'Deutsch' },
   en: { 'lang.name': 'English' },
+  he: { 'lang.name': 'עברית' },
   es: { 'lang.name': 'Español' },
   fr: { 'lang.name': 'Français' },
   it: { 'lang.name': 'Italiano' },
@@ -109,6 +110,7 @@ export async function setLang(lang) {
   localStorage.setItem('stlt-lang', lang);
   document.documentElement.setAttribute('data-lang', lang);
   document.documentElement.setAttribute('lang', lang);
+  document.documentElement.setAttribute('dir', lang === 'he' ? 'rtl' : 'ltr');
 
   applyTranslations();
   return true;
@@ -167,6 +169,7 @@ export async function initLang() {
   // Set attributes before the async load so CSS/JS reading `lang` works immediately.
   document.documentElement.setAttribute('data-lang', _currentLang);
   document.documentElement.setAttribute('lang', _currentLang);
+  document.documentElement.setAttribute('dir', _currentLang === 'he' ? 'rtl' : 'ltr');
 
   const [enOk] = await Promise.all([_loadLang('en'), _loadLang(_currentLang)]);
 
@@ -176,6 +179,7 @@ export async function initLang() {
     _currentLang = 'en';
     document.documentElement.setAttribute('data-lang', 'en');
     document.documentElement.setAttribute('lang', 'en');
+    document.documentElement.setAttribute('dir', 'ltr');
   }
 
   // Dev-time sanity check: warn about keys present in English but missing in
