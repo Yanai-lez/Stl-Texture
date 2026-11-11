@@ -155,8 +155,14 @@ export function applyTranslations() {
  * of text. The caller should surface a visible warning in this case.
  */
 export async function initLang() {
+  // One-time migration: make English the default for existing installations too.
+  // After this reset, keep any language the user explicitly selects.
+  const defaultMigration = 'stlt-english-default-v1';
+  if (localStorage.getItem(defaultMigration) !== 'done') {
+    localStorage.setItem('stlt-lang', 'en');
+    localStorage.setItem(defaultMigration, 'done');
+  }
   const saved = localStorage.getItem('stlt-lang');
-  // English is the first-visit default. Keep an explicitly saved language choice.
   _currentLang = (saved && TRANSLATIONS[saved]) ? saved : 'en';
 
   // Set attributes before the async load so CSS/JS reading `lang` works immediately.
