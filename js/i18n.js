@@ -155,16 +155,9 @@ export function applyTranslations() {
  * of text. The caller should surface a visible warning in this case.
  */
 export async function initLang() {
-  const saved   = localStorage.getItem('stlt-lang');
-  const browser = navigator.language.split('-')[0];
-
-  if (saved && TRANSLATIONS[saved]) {
-    _currentLang = saved;
-  } else if (TRANSLATIONS[browser]) {
-    _currentLang = browser;
-  } else {
-    _currentLang = 'en';
-  }
+  const saved = localStorage.getItem('stlt-lang');
+  // English is the first-visit default. Keep an explicitly saved language choice.
+  _currentLang = (saved && TRANSLATIONS[saved]) ? saved : 'en';
 
   // Set attributes before the async load so CSS/JS reading `lang` works immediately.
   document.documentElement.setAttribute('data-lang', _currentLang);
