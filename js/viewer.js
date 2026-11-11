@@ -278,13 +278,6 @@ export function initViewer(canvas) {
     _lastPointer = { x: clientX, y: clientY };
     controls.enableRotate = false;   // we'll rotate manually
 
-    // Show marker, sized as ~1.5 % of the visible frustum height
-    _pivotMarker.position.copy(_customPivot);
-    const markerScale = _isPerspective
-      ? _customPivot.distanceTo(camera.position) * Math.tan(THREE.MathUtils.degToRad(perspCamera.fov / 2)) * 0.015
-      : (orthoCamera.top / orthoCamera.zoom) * 0.015;
-    _pivotMarker.scale.setScalar(markerScale);
-    _pivotMarker.visible = true;
     _needsRender = true;
   }
 
@@ -464,7 +457,6 @@ export function initViewer(canvas) {
       // Pivot on the surface where the finger landed, not where it has slid
       // to. Orbiting starts from here, so the slop isn't replayed as a jump.
       _beginOrbit(_pickPivot(_touchStart.x, _touchStart.y) ?? controls.target.clone(), pt.x, pt.y);
-      if (!currentMesh) _pivotMarker.visible = false;
       _touchMode = 'orbit';
     } else if (_touchMode === 'orbit') {
       _orbitTo(pt.x, pt.y);
