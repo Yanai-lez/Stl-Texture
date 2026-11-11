@@ -497,12 +497,6 @@ const meshDiagSpinner    = document.getElementById('mesh-diag-spinner');
 const meshDiagAdvanced   = document.getElementById('mesh-diag-advanced');
 
 // ── License panel DOM refs ────────────────────────────────────────────────────
-const licenseLink    = document.getElementById('license-link');
-const licenseOverlay = document.getElementById('license-overlay');
-const licenseClose   = document.getElementById('license-close');
-const imprintLink    = document.getElementById('imprint-link');
-const imprintOverlay = document.getElementById('imprint-overlay');
-const imprintClose   = document.getElementById('imprint-close');
 
 // ── Welcome / What's New popup ───────────────────────────────────────────────
 // Bump this date whenever the "What's New" bullets in index.html change to
@@ -1073,7 +1067,7 @@ function autoFitCylinderAxis() {
 let PRESETS = [];
 
 document.getElementById('app-version').textContent = `v${APP_VERSION}`;
-console.info(`BumpMesh v${APP_VERSION}`);
+console.info(`STL Texture v${APP_VERSION}`);
 
 initViewer(canvas);
 
@@ -1828,20 +1822,6 @@ function wireEvents() {
     });
   });
 
-  // ── License ──
-  licenseLink.addEventListener('click', () => { licenseOverlay.classList.remove('hidden'); trapFocus(licenseOverlay); });
-  licenseClose.addEventListener('click', () => licenseOverlay.classList.add('hidden'));
-  licenseOverlay.addEventListener('click', (e) => {
-    if (e.target === licenseOverlay) licenseOverlay.classList.add('hidden');
-  });
-
-  // ── Imprint & Privacy ──
-  imprintLink.addEventListener('click', () => { imprintOverlay.classList.remove('hidden'); trapFocus(imprintOverlay); });
-  imprintClose.addEventListener('click', () => imprintOverlay.classList.add('hidden'));
-  imprintOverlay.addEventListener('click', (e) => {
-    if (e.target === imprintOverlay) imprintOverlay.classList.add('hidden');
-  });
-
   // ── Welcome / What's New ──
   welcomeLink.addEventListener('click', () => openWelcome({ allowDismissPersist: false }));
 
@@ -1851,36 +1831,8 @@ function wireEvents() {
     clearDiagHighlight();
   });
 
-  // ── Support banner dismiss ──
-  document.getElementById('store-cta-dismiss').addEventListener('click', () => {
-    document.getElementById('store-cta-wrapper').classList.add('store-cta-hidden');
-  });
-
   // ── Export ──
-  const startExport = (format) => {
-    // Start the export immediately — the pipeline runs in the worker, so the
-    // sponsor overlay sits on top of a live progress bar instead of delaying
-    // the work until it's dismissed.
-    handleExport(format);
-
-    if (sessionStorage.getItem('stlt-no-sponsor') === '1') return;
-    const overlay = document.getElementById('sponsor-overlay');
-    const closeBtn = document.getElementById('sponsor-close');
-    // Button plus the inline text link (the button may be hidden or removed by adblockers)
-    const storeLinks = overlay.querySelectorAll('a[href="https://geni.us/CNCStoreTexture"]');
-    overlay.classList.remove('hidden');
-    trapFocus(overlay);
-
-    const dismiss = () => {
-      if (document.getElementById('sponsor-dont-show').checked) {
-        sessionStorage.setItem('stlt-no-sponsor', '1');
-      }
-      overlay.classList.add('hidden');
-    };
-
-    closeBtn.onclick = dismiss;
-    storeLinks.forEach(a => { a.onclick = () => setTimeout(dismiss, 150); });
-  };
+  const startExport = (format) => handleExport(format);
   exportBtn.addEventListener('click', () => startExport('stl'));
   export3mfBtn.addEventListener('click', () => startExport('3mf'));
 
@@ -2214,8 +2166,6 @@ function wireEvents() {
       if (placeOnFaceActive) togglePlaceOnFace(false);
       if (stampPlaceActive || _stampWheelArmed) toggleStampPlace(false);
       if (exclusionTool) setExclusionTool(null);
-      licenseOverlay.classList.add('hidden');
-      imprintOverlay.classList.add('hidden');
       closeStepDialog();
       _clearShiftLinePreview();
     }
