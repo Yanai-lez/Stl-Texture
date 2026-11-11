@@ -157,8 +157,9 @@ export function applyTranslations() {
 export async function initLang() {
   // One-time migration: make English the default for existing installations too.
   // After this reset, keep any language the user explicitly selects.
-  const defaultMigration = 'stlt-english-default-v1';
+  const defaultMigration = 'stlt-english-default-v2';
   if (localStorage.getItem(defaultMigration) !== 'done') {
+    // Reset any previously stored browser-language choice to English once.
     localStorage.setItem('stlt-lang', 'en');
     localStorage.setItem(defaultMigration, 'done');
   }
