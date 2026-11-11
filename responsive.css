@@ -476,3 +476,26 @@ main,
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Header controls on phones: text buttons size to their label instead of the
+   fixed icon-button width, and the action row wraps instead of scrolling or
+   pushing buttons past the screen edge. */
+@media (max-width: 699px) {
+  .header-actions {
+    flex-wrap: wrap;
+    overflow: visible;
+    row-gap: 6px;
+  }
+
+  .project-io { flex-wrap: wrap; max-width: 100%; row-gap: 4px; }
+
+  .project-io .icon-btn.text-btn {
+    width: auto;
+    flex: 0 0 auto;
+    min-width: 0;
+    padding-inline: 10px;
+    white-space: nowrap;
+  }
+
+  .theme-toggle { white-space: nowrap; }
+}
