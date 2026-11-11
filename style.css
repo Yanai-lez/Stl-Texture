@@ -2987,3 +2987,195 @@ input[type="number"].val:focus { outline: none; border-color: var(--accent); }
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+
+/* ── Mobile button and overflow correction ─────────────────────────────
+   Keep touch targets comfortable, allow long labels to wrap, and prevent
+   flex/grid controls from widening the page on narrow phone screens. */
+@media (max-width: 699px) {
+  html, body, main, #settings-panel, .gallery-panel,
+  .panel-section, .form-row, .load-stl-row, .map-actions,
+  .export-buttons, .excl-tools, .excl-mode-row, .excl-footer {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Main interactive controls: larger hit areas without forcing a fixed width. */
+  #settings-panel button,
+  .gallery-panel button,
+  #viewport-footer button,
+  .load-stl-row > *,
+  .map-actions > *,
+  .export-buttons > *,
+  .form-row button,
+  .step-dialog-actions button {
+    min-height: 40px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Icon-only controls stay square, but are no longer tiny. */
+  .lock-btn,
+  .layer-btn,
+  .custom-map-remove {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
+    flex: 0 0 38px;
+  }
+
+  .section-btn,
+  .spacemouse-btn {
+    min-width: 38px;
+    min-height: 38px;
+    height: 38px;
+  }
+
+  /* Let button text wrap instead of being cut off or pushing past the edge. */
+  .upload-btn,
+  .place-on-face-btn,
+  .rotate-apply-btn,
+  .rotate-reset-btn,
+  .excl-tool-btn,
+  .excl-seg-btn,
+  .excl-clear-btn,
+  .smart-res-btn,
+  .mesh-diag-run-btn,
+  .diag-show-btn,
+  .precision-refresh-btn,
+  .cylinder-axis-btn,
+  .gallery-turntable-btn,
+  .gallery-done-btn,
+  .export-btn {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
+    padding: 9px 8px;
+  }
+
+  .form-row {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .form-row label,
+  .form-row .form-row-label {
+    flex: 0 1 84px;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .form-row > input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  .form-row > select,
+  .form-row > textarea {
+    flex: 1 1 120px;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .excl-tools,
+  .map-actions,
+  .load-stl-row,
+  .export-buttons {
+    flex-wrap: wrap;
+  }
+
+  .excl-tools > *,
+  .map-actions > *,
+  .load-stl-row > *,
+  .export-buttons > * {
+    flex: 1 1 120px;
+    min-width: 0;
+  }
+
+  .excl-seg-btn {
+    min-height: 40px;
+    padding-inline: 5px;
+  }
+
+  #viewport-footer {
+    flex-wrap: wrap;
+    align-content: center;
+    min-width: 0;
+  }
+
+  #viewport-footer > * {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* The header can use a third line on narrow devices rather than squeezing
+     or clipping the project, language, theme, and GitHub controls. */
+  header {
+    height: auto;
+    min-height: 0;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .header-actions {
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  .project-io {
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .project-io .icon-btn,
+  .project-io .icon-btn.text-btn,
+  .github-link,
+  .theme-toggle,
+  .lang-dropdown {
+    min-height: 40px;
+    height: 40px;
+  }
+
+  .project-io .icon-btn {
+    width: 40px;
+    flex: 0 0 40px;
+  }
+
+  .project-io .icon-btn.text-btn {
+    width: auto;
+    min-width: 40px;
+    flex: 0 1 auto;
+    padding-inline: 8px;
+  }
+
+  .github-link {
+    width: 40px;
+    flex: 0 0 40px;
+  }
+
+  .theme-toggle,
+  .lang-dropdown {
+    padding-inline: 9px;
+    font-size: 11px;
+  }
+
+  .export-dialog {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: min(70dvh, 520px);
+  }
+}
+
+@media (max-width: 360px) {
+  .panel-section { padding-inline: 9px; }
+  .form-row label,
+  .form-row .form-row-label { flex-basis: 72px; }
+  .excl-tools { gap: 4px; }
+  .excl-tool-btn { padding-inline: 5px; font-size: 10px; }
+  .header-actions { column-gap: 4px; }
+}
+
