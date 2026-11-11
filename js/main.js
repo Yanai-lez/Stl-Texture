@@ -48,7 +48,7 @@ let currentBounds     = null;   // bounds of the original geometry
 // Forward rigid transform from the file's original coordinates to the in-app
 // (centered, possibly rotated) working space: mem = poseRot·orig + poseTrans.
 // Import centering, in-app rotation, and place-on-face all fold into it; the
-// full INVERSE is applied on export so files leave BumpMesh in their original
+// full INVERSE is applied on export so files leave STL Texture in their original
 // position AND orientation (issue #82) — in-app rotation is a texturing aid,
 // not part of the output.
 let currentPoseRot    = new THREE.Quaternion();
