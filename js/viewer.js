@@ -258,15 +258,6 @@ export function initViewer(canvas) {
   let _lastKnownPivot  = null;   // persists between drags as fallback
   let _lastPointer     = null;
 
-  // Small red sphere shown at the orbit centre during a drag
-  const _pivotMarker = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 16, 10),
-    new THREE.MeshBasicMaterial({ color: 0xff2222, depthTest: false }),
-  );
-  _pivotMarker.renderOrder = 10;
-  _pivotMarker.visible = false;
-  scene.add(_pivotMarker);
-
   // Surface point under the given client coords, else the last pivot, else null.
   function _pickPivot(clientX, clientY) {
     if (!currentMesh) return null;
@@ -349,7 +340,6 @@ export function initViewer(canvas) {
     // pitch clamp guarantees we are never at/over a pole.
     camera.up.set(0, 0, 1);
     camera.lookAt(controls.target);
-    _pivotMarker.visible = false;
     _needsRender = true;
   }
 
