@@ -7,26 +7,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BumpMesh by CNC Kitchen</title>
-  <meta name="description" content="BumpMesh by CNC Kitchen is a browser-based tool for adding displacement textures to STL, OBJ, and 3MF models locally, then exporting printable textured meshes." />
-  <link rel="canonical" href="https://bumpmesh.com/" />
+  <title>STL Texture</title>
+  <meta name="description" content="A browser-based tool for adding displacement textures to STL, OBJ, and 3MF models locally, then exporting printable textured meshes." />
+  <link rel="canonical" href="https://yanai-lez.github.io/Stl-Texture/" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="BumpMesh" />
-  <meta property="og:title" content="BumpMesh by CNC Kitchen" />
+  <meta property="og:site_name" content="STL Texture" />
+  <meta property="og:title" content="STL Texture" />
   <meta property="og:description" content="Add displacement textures to STL, OBJ, and 3MF models directly in your browser. Preview, mask, bake, and export printable textured meshes locally." />
-  <meta property="og:url" content="https://bumpmesh.com/" />
-  <meta property="og:image" content="https://bumpmesh.com/assets/preview.jpg" />
-  <meta property="og:image:secure_url" content="https://bumpmesh.com/assets/preview.jpg" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="2078" />
-  <meta property="og:image:height" content="1091" />
-  <meta property="og:image:alt" content="BumpMesh interface for previewing and exporting textured 3D models" />
+  <meta property="og:url" content="https://yanai-lez.github.io/Stl-Texture/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="BumpMesh by CNC Kitchen" />
+  <meta name="twitter:title" content="STL Texture" />
   <meta name="twitter:description" content="Add displacement textures to STL, OBJ, and 3MF models directly in your browser. Preview, mask, bake, and export printable textured meshes locally." />
-  <meta name="twitter:image" content="https://bumpmesh.com/assets/preview.jpg" />
-  <meta name="twitter:image:alt" content="BumpMesh interface for previewing and exporting textured 3D models" />
   <link rel="icon" type="image/png" href="logo.png" />
   <link rel="stylesheet" href="style.css" />
   <script>
@@ -54,8 +46,8 @@
 <body>
   <header>
     <div class="logo">
-      <img src="logo.png" alt="BumpMesh" width="24" height="24" />
-      <span>BumpMesh <span id="app-version" class="app-version"></span> <small style="opacity:.6;font-weight:400">by <a href="https://www.youtube.com/@CNCKitchen" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">CNC Kitchen</a></small></span>
+      <img src="logo.svg" alt="STL Texture" width="24" height="24" />
+      <span>STL Texture <span id="app-version" class="app-version"></span></span>
     </div>
     <div class="header-actions">
       <div class="project-io">
@@ -99,7 +91,7 @@
         <span class="icon-moon" data-i18n="theme.dark">Dark Theme</span>
         <span class="icon-sun" data-i18n="theme.light">Light Theme</span>
       </button>
-      <a href="https://github.com/CNCKitchen/stlTexturizer" target="_blank" rel="noopener noreferrer" class="github-link" title="GitHub Repository" aria-label="GitHub Repository">
+      <a href="https://github.com/Yanai-lez/Stl-Texture" target="_blank" rel="noopener noreferrer" class="github-link" title="GitHub Repository" aria-label="GitHub Repository">
         <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
       </a>
     </div>
@@ -151,12 +143,7 @@
           <span data-i18n="warnings.softwareRendering">⚠ 3D is being rendered on the CPU — hardware acceleration is off or unavailable in this browser, so the viewer will be slow. Turn on “Use graphics acceleration when available” in the browser settings and restart it; chrome://gpu should then list WebGL as “Hardware accelerated”. On laptops with several GPUs, set the browser to “High performance” in the OS graphics settings.</span>
           <button id="gpu-warning-dismiss" class="gpu-warning-dismiss" aria-label="Dismiss">&times;</button>
         </div>
-        <div id="store-cta-wrapper">
-          <span id="store-cta">
-            <span data-i18n-html="cta.store">Support this tool? Shop at <a href="https://geni.us/CNCStoreTexture" target="_blank" rel="noopener noreferrer">CNCKitchen.STORE</a> or send a tip via <a href="https://www.paypal.me/CNCKitchen" target="_blank" rel="noopener noreferrer">PayPal</a> / <a href="https://ko-fi.com/cnckitchen" target="_blank" rel="noopener noreferrer">Ko-fi</a></span><button id="store-cta-dismiss" aria-label="Dismiss">&times;</button>
-          </span>
-        </div>
-      </div>
+</div>
       <div id="viewport-footer">
         <span id="mesh-info" class="mesh-info"></span>
         <label class="wireframe-toggle">
@@ -723,9 +710,6 @@
       </section>
 
       <button id="welcome-link" class="license-link">What&rsquo;s New</button>
-      <button id="license-link" class="license-link" data-i18n="license.btn">License &amp; Terms</button>
-      <button id="imprint-link" class="license-link" data-i18n="imprint.btn">Imprint &amp; Privacy</button>
-
     </aside>
 
     <!-- Texture gallery (filled by js/textureGallery.js). Takes the settings panel's place while open
@@ -752,7 +736,7 @@
         </span>
       </div>
       <div id="gallery-body" class="gallery-body"></div>
-      <p class="gallery-credits" data-i18n-html="gallery.credits">Patterns marked <strong>HP</strong> are based on <a href="https://heropatterns.com/" target="_blank" rel="noopener">Hero Patterns</a> by Steve Schoger, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> and converted to heightmaps. Textures marked <strong>CC0</strong> come from <a href="https://ambientcg.com/" target="_blank" rel="noopener">ambientCG</a> and <a href="https://polyhaven.com/" target="_blank" rel="noopener">Poly Haven</a> (public domain). Textures marked <strong>FF</strong> were made with <a href="https://www.filterforge.com/" target="_blank" rel="noopener">Filter Forge</a>. All other textures ship with BumpMesh.</p>
+      <p class="gallery-credits" data-i18n-html="gallery.credits">Patterns marked <strong>HP</strong> are based on <a href="https://heropatterns.com/" target="_blank" rel="noopener">Hero Patterns</a> by Steve Schoger, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> and converted to heightmaps. Textures marked <strong>CC0</strong> come from <a href="https://ambientcg.com/" target="_blank" rel="noopener">ambientCG</a> and <a href="https://polyhaven.com/" target="_blank" rel="noopener">Poly Haven</a> (public domain). Textures marked <strong>FF</strong> were made with <a href="https://www.filterforge.com/" target="_blank" rel="noopener">Filter Forge</a>. All other textures are included with STL Texture.</p>
     </aside>
   </main>
 
@@ -790,74 +774,13 @@
     </div>
   </div>
 
-  <div id="license-overlay" class="license-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="license-title">
-    <div class="license-modal">
-      <button id="license-close" class="license-close-btn" aria-label="Close">&#215;</button>
-      <h2 id="license-title" data-i18n="license.title">License &amp; Terms</h2>
-      <ul class="license-list">
-        <li data-i18n-html="license.item1">Free to use for any purpose, including <strong>commercial work</strong> (e.g., texturing STLs for clients or products).</li>
-        <li data-i18n-html="license.item2">Attribution is <strong>appreciated</strong> but <strong>not required</strong> when using this tool as-is.</li>
-        <li data-i18n-html="license.item4">This tool is provided <strong>as-is</strong> with <strong>no warranty</strong> of any kind. Use at your own risk.</li>
-        <li data-i18n-html="license.item5"><strong>No support</strong> is provided. The author is under no obligation to fix bugs, answer questions, or update this tool. That said, bug reports and feature requests are always welcome at <a href="mailto:texturizer@cnckitchen.com">texturizer@cnckitchen.com</a>.</li>
-        <li data-i18n-html="license.item6">The author shall not be held <strong>liable</strong> for any damages, data loss, or issues arising from the use of this tool.</li>
-        <li data-i18n-html="license.item7">Want to license or embed this tool for your own business or website? Contact us at <a href="mailto:contact@cnckitchen.com">contact@cnckitchen.com</a>.</li>
-        <li data-i18n-html="license.item3">Support this tool? Shop at <a href="https://geni.us/CNCStoreTexture" target="_blank" rel="noopener">CNCKitchen.STORE</a> or send a tip via <a href="https://www.paypal.me/CNCKitchen" target="_blank" rel="noopener">PayPal</a> / <a href="https://ko-fi.com/cnckitchen" target="_blank" rel="noopener">Ko-fi</a>.</li>
-        <li data-i18n-html="license.item8">Source code available on <a href="https://github.com/CNCKitchen/stlTexturizer" target="_blank" rel="noopener">GitHub</a>.</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Imprint & Privacy popup -->
-  <div id="imprint-overlay" class="license-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="imprint-title">
-    <div class="license-modal imprint-modal">
-      <button id="imprint-close" class="license-close-btn" aria-label="Close">&#215;</button>
-      <h2 id="imprint-title" data-i18n="imprint.title">Imprint &amp; Privacy Policy</h2>
-
-      <h3 class="imprint-section-heading" data-i18n="imprint.sectionImprint">Imprint (Impressum)</h3>
-      <p class="imprint-text" data-i18n-html="imprint.info">CNC Kitchen<br>Stefan Hermann<br>Bahnhofstr. 2<br>88145 Hergatz<br>Germany</p>
-      <p class="imprint-text" data-i18n-html="imprint.contact">Email: <a href="mailto:contact@cnckitchen.com">contact@cnckitchen.com</a><br>Phone: +49 175 2011824<br><em>The phone number is for legal/business inquiries only &mdash; not for support.</em></p>
-      <p class="imprint-text" data-i18n-html="imprint.odr">EU Online Dispute Resolution platform: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr</a></p>
-
-      <h3 class="imprint-section-heading" data-i18n="imprint.sectionPrivacy">Privacy Policy (Datenschutzerkl&auml;rung)</h3>
-      <p class="imprint-text" data-i18n-html="imprint.privacyIntro"><strong>Responsible party</strong> (Verantwortlicher gem. Art. 4 Abs. 7 DSGVO): Stefan Hermann, Bahnhofstr. 2, 88145 Hergatz, Germany.</p>
-      <ul class="license-list">
-        <li data-i18n-html="imprint.privacyHosting">This website is hosted on <strong>GitHub Pages</strong> (GitHub Inc. / Microsoft Corp., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA). When you visit this site, GitHub may process your IP address in server logs. Legal basis: Art. 6(1)(f) DSGVO (legitimate interest in providing the website). See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub&rsquo;s Privacy Statement</a>.</li>
-        <li data-i18n-html="imprint.privacyLocal">This tool stores data only in your browser: preferences (e.g. language, theme, favorites) in <strong>localStorage</strong>, your current texture settings in <strong>sessionStorage</strong> (cleared when you close the tab), and textures you upload in <strong>IndexedDB</strong> so you can reuse them. This data never leaves your device and is not transmitted to any server. You can delete uploaded textures in the Texture Gallery, or everything by clearing this site&rsquo;s data in your browser.</li>
-        <li data-i18n-html="imprint.privacyNoCookies">This website does <strong>not</strong> use cookies, analytics, or any tracking technologies.</li>
-        <li data-i18n-html="imprint.privacyExternal">This site contains links to external websites (e.g., CNCKitchen.STORE, PayPal, Ko-fi). These sites have their own privacy policies, over which we have no control.</li>
-        <li data-i18n-html="imprint.privacyRights">Under the GDPR you have the right to <strong>access, rectification, erasure, restriction of processing, data portability</strong>, and the right to <strong>lodge a complaint</strong> with a supervisory authority.</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Sponsor popup -->
-  <div id="sponsor-overlay" class="sponsor-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="sponsor-title">
-    <div class="sponsor-modal">
-      <h2 id="sponsor-title" data-i18n="sponsor.title">Thanks for using BumpMesh by CNC Kitchen!</h2>
-      <p data-i18n-html="sponsor.body">This tool is provided <strong>completely free</strong> by CNC Kitchen.<br>
-      While your STL is being processed, why not check out the <a href="https://geni.us/CNCStoreTexture" target="_blank" rel="noopener noreferrer" class="modal-text-link">store</a> that helps us keep making cool stuff for you?</p>
-      <a href="https://geni.us/CNCStoreTexture" target="_blank" rel="noopener noreferrer" class="sponsor-link" data-i18n="sponsor.visitStore">
-        🛒 Visit CNCKitchen.STORE
-      </a>
-      <a href="https://www.paypal.me/CNCKitchen" target="_blank" rel="noopener noreferrer" class="sponsor-link sponsor-link--paypal" data-i18n="sponsor.donate">
-        💙 Send a tip on PayPal
-      </a>
-      <a href="https://ko-fi.com/cnckitchen" target="_blank" rel="noopener noreferrer" class="sponsor-link sponsor-link--kofi" data-i18n="sponsor.donateKofi">
-        ☕ Send a tip on Ko-fi
-      </a>
-      <label class="sponsor-no-show">
-        <input type="checkbox" id="sponsor-dont-show" />
-        <span data-i18n="sponsor.dontShow">Don't show this again</span>
-      </label>
-      <button id="sponsor-close" class="sponsor-close-btn" data-i18n-html="sponsor.closeAndContinue">Close &amp; Continue</button>
-    </div>
-  </div>
+  <!-- Original author information dialogs removed from the customized interface. -->
 
   <!-- Welcome / What's New popup -->
   <div id="welcome-overlay" class="welcome-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
     <div class="welcome-modal">
       <button id="welcome-close" class="license-close-btn" aria-label="Close">&#215;</button>
-      <h2 id="welcome-title">Welcome to BumpMesh</h2>
+      <h2 id="welcome-title">Welcome to STL Texture</h2>
       <p class="welcome-tagline">Add a texture to any of your STLs &mdash; directly in your browser, no cloud and completely free!</p>
 
       <h3 class="welcome-heading">Quick start</h3>
