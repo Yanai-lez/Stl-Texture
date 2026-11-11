@@ -2722,3 +2722,254 @@ input[type="number"].val:focus { outline: none; border-color: var(--accent); }
   border-color: var(--accent);
   color: var(--text);
 }
+
+/* ── Responsive workspace redesign (STL Texture) ─────────────────────────
+   The 3-D engine and its DOM stay shared across devices; only the workspace
+   layout changes. This keeps every tool and setting connected to one state. */
+
+/* Desktop: a wider, stable control dock and a larger uninterrupted viewport. */
+@media (min-width: 1024px) {
+  :root {
+    --sidebar-w: clamp(360px, 25vw, 470px);
+    --header-h: 56px;
+  }
+
+  header {
+    padding-inline: 22px;
+    gap: 18px;
+  }
+
+  .header-actions { gap: 10px; }
+
+  #settings-panel,
+  .gallery-panel {
+    width: var(--sidebar-w);
+    flex: 0 0 var(--sidebar-w);
+  }
+
+  #settings-panel {
+    border-left: 1px solid var(--border);
+    overscroll-behavior: contain;
+  }
+
+  .panel-section { padding: 17px 20px; }
+  .panel-section h2 { font-size: 11px; margin-bottom: 13px; }
+
+  #viewport-footer {
+    min-height: 38px;
+    padding: 6px 16px;
+    gap: 6px 18px;
+  }
+
+  .wireframe-toggle { min-height: 28px; font-size: 12px; }
+  .section-btn, .spacemouse-btn { min-height: 28px; }
+}
+
+/* Tablet portrait: keep the model visible above a full-width settings workspace. */
+@media (min-width: 700px) and (max-width: 1023px) and (orientation: portrait) {
+  main { flex-direction: column; }
+
+  #viewport-section {
+    flex: 0 0 44%;
+    min-height: 180px;
+  }
+
+  #settings-panel,
+  .gallery-panel {
+    width: 100%;
+    height: auto;
+    flex: 1 1 0;
+    min-height: 0;
+    border-left: 0;
+  }
+
+  .sidebar-toggle {
+    position: static;
+    flex: 0 0 32px;
+    width: 100%;
+    height: 32px;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+  }
+
+  .sidebar-toggle svg { transform: rotate(90deg); }
+  main.sidebar-collapsed .sidebar-toggle svg { transform: rotate(-90deg); }
+
+  .panel-section { padding: 14px 18px; }
+}
+
+/* Touch-first phones: compact two-row header, large controls, and a usable
+   model/settings split. The settings area owns its scroll instead of the page. */
+@media (max-width: 699px) {
+  html, body { width: 100%; min-width: 0; }
+  body { height: 100%; overflow: hidden; }
+  header {
+    min-height: 68px;
+    height: auto;
+    padding: 7px 10px;
+    align-content: center;
+    row-gap: 5px;
+    column-gap: 8px;
+  }
+
+  .logo { font-size: 13px; gap: 7px; }
+  .logo img { width: 22px; height: 22px; }
+  .header-actions {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 5px;
+  }
+
+  .project-io { gap: 3px; min-width: 0; }
+  .project-io-gap { display: none; }
+  .project-io .icon-btn { width: 36px; height: 36px; flex: 0 0 36px; }
+  .project-io .icon-btn.text-btn { min-width: 40px; height: 36px; padding-inline: 7px; }
+  .lang-dropdown, .theme-toggle { height: 36px; min-height: 36px; }
+  .theme-toggle { padding-inline: 8px; font-size: 10px; }
+  .github-link { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 36px; }
+
+  main { min-height: 0; min-width: 0; }
+  #viewport-section { min-height: 150px; }
+  #viewport-footer {
+    min-height: 38px;
+    padding: 5px 8px;
+    gap: 5px 10px;
+  }
+
+  .wireframe-toggle {
+    min-height: 32px;
+    gap: 5px;
+    font-size: 11px;
+  }
+
+  .wireframe-toggle input { width: 16px; height: 16px; }
+  .section-btn { min-width: 32px; height: 32px; }
+  .spacemouse-btn { height: 32px; }
+  .spacemouse-panel {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: 48px;
+    width: auto;
+    max-width: none;
+  }
+
+  #settings-panel,
+  .gallery-panel {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 0;
+    flex: 1 1 0;
+    border-left: 0;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .panel-section { padding: 12px 12px; }
+  .panel-section h2 { font-size: 11px; margin-bottom: 11px; }
+  .panel-subsection-heading { margin-top: 14px; }
+
+  .sidebar-toggle {
+    position: static;
+    flex: 0 0 30px;
+    width: 100%;
+    height: 30px;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+  }
+
+  .sidebar-toggle svg { transform: rotate(90deg); }
+  main.sidebar-collapsed .sidebar-toggle svg { transform: rotate(-90deg); }
+
+  .load-stl-row { gap: 6px; }
+  .load-stl-row > * { min-height: 40px; }
+  .upload-btn, .place-on-face-btn { min-height: 40px; }
+  .form-row { gap: 7px; min-width: 0; }
+  .form-row label, .form-row .form-row-label { flex-basis: 84px; white-space: normal; }
+  .form-row input, .form-row select, .form-row button { min-width: 0; }
+  .form-row input[type="range"] { min-width: 70px; }
+  .form-row input[type="number"], .form-row select { min-height: 38px; }
+  button, [role="button"], .link-label { -webkit-tap-highlight-color: transparent; }
+  button, .upload-btn, .place-on-face-btn, .rotate-apply-btn, .rotate-reset-btn {
+    touch-action: manipulation;
+  }
+
+  .export-buttons { gap: 8px; }
+  .export-buttons button { min-height: 42px; }
+  .export-dialog {
+    position: fixed;
+    top: auto;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    width: auto;
+    max-width: none;
+    z-index: 1000;
+  }
+
+  .license-overlay { padding: 10px; }
+  .license-modal { width: min(100%, 520px); max-height: calc(100dvh - 20px); overflow-y: auto; }
+  .step-dialog-actions button { min-height: 42px; }
+}
+
+/* Phones in landscape: keep the control dock beside the viewport rather than
+   forcing a very short vertical stack. */
+@media (max-width: 699px) and (orientation: landscape) {
+  header {
+    min-height: 48px;
+    height: 48px;
+    padding: 5px 10px;
+    flex-wrap: nowrap;
+  }
+
+  .header-actions { width: auto; margin-left: auto; }
+  .app-version { display: none; }
+
+  main { flex-direction: row; }
+  #viewport-section { flex: 1 1 0; min-width: 0; min-height: 0; }
+  #settings-panel, .gallery-panel {
+    width: min(46vw, 340px);
+    flex: 0 0 min(46vw, 340px);
+    height: auto;
+    border-left: 1px solid var(--border);
+  }
+
+  .sidebar-toggle {
+    position: absolute;
+    top: 50%;
+    right: min(46vw, 340px);
+    width: 24px;
+    height: 48px;
+    margin-top: -24px;
+    border: 1px solid var(--border);
+    border-right: 0;
+    border-radius: var(--radius) 0 0 var(--radius);
+    flex: none;
+  }
+
+  main.sidebar-collapsed .sidebar-toggle { right: 0; }
+  .sidebar-toggle svg { transform: none; }
+  main.sidebar-collapsed .sidebar-toggle svg { transform: rotate(180deg); }
+  .panel-section { padding: 9px 10px; }
+}
+
+/* Narrow screens and long translations: prevent flex children from forcing
+   horizontal scrolling, while keeping the controls themselves reachable. */
+#settings-panel *, .gallery-panel *, #viewport-footer * { min-width: 0; }
+#viewport, #drop-zone { touch-action: none; }
+.export-dialog, .spacemouse-panel, .license-modal, .step-modal { max-width: calc(100vw - 16px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}
