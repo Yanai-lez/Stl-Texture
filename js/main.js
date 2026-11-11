@@ -16,6 +16,7 @@ import { loadModelFile, computeBounds, getTriangleCount }  from './stlLoader.js'
 import { estimateStep } from './stepLoader.js';
 import { resolveStepSettings } from './stepConvert.js';
 import { computeSmartResolution } from './smartResolution.js';
+import { computeTriEdges, simulateFromEdges } from './subdivisionEstimate.js';
 import { REF_TEXTURE_SIZE } from './textureAnalysis.js';
 import { loadFullPreset, loadCustomTexture, IMAGE_PRESETS }  from './presetTextures.js';
 import { initTextureGallery } from './textureGallery.js';
@@ -352,11 +353,68 @@ const stepImportCancel  = document.getElementById('step-import-cancel');
 
 // Render the bottom-left mesh stats line, prefixed with the loaded model's
 // name (currentStlName, extension-stripped) so the user can see which file
-// the stats belong to.
+// the stats belong to. The first part describes the loaded model; once a texture
+// is applied, an estimate of the triangle count after export is appended and kept
+// in sync with the output resolution (see _refreshMeshInfo).
+let _meshInfoBase = null;       // { triCount, mb, sx, sy, sz } of the loaded model
+let _meshInfoEstimateKey = '';  // geometry / resolution the cached estimate belongs to
+let _meshInfoEstimate = null;   // predicted triangles after export, or null
+let _meshInfoTriEdges = null;   // per-triangle edge lengths, cached per geometry
+let _meshInfoTriEdgesGeo = null;
+let _meshInfoTimer = null;
+
+function _renderMeshInfo() {
+  if (!_meshInfoBase) return;
+  const { triCount, mb, sx, sy, sz } = _meshInfoBase;
+  // LRI/PDI keep the "<" of "<0.01" from flipping inside right-to-left text.
+  const mbText = Number(mb) < 0.01 ? '\u2066<0.01\u2069' : mb;
+  const parts = [];
+  if (currentStlName) parts.push(`${currentStlName}${currentStlExt}`);
+  parts.push(t('ui.meshInfo', { n: triCount.toLocaleString(), mb: mbText, sx, sy, sz }));
+  if (_meshInfoEstimate != null) {
+    parts.push(t('ui.meshInfoExport', { n: _meshInfoEstimate.toLocaleString() }));
+  }
+  // Each part is its own bidi-isolated span, so the English file name and the
+  // translated stats keep a sensible order in both LTR and RTL layouts.
+  const nodes = [];
+  parts.forEach((text, i) => {
+    if (i) nodes.push(document.createTextNode(' · '));
+    const bdi = document.createElement('bdi');
+    bdi.textContent = text;
+    nodes.push(bdi);
+  });
+  meshInfo.replaceChildren(...nodes);
+}
+
 function _setMeshInfo(triCount, mb, sx, sy, sz) {
-  const stats = t('ui.meshInfo', { n: triCount.toLocaleString(), mb, sx, sy, sz });
-  const fileName = currentStlName ? `${currentStlName}${currentStlExt}` : '';
-  meshInfo.textContent = fileName ? `${fileName} · ${stats}` : stats;
+  _meshInfoBase = { triCount, mb, sx, sy, sz };
+  _meshInfoEstimateKey = '';
+  _renderMeshInfo();
+  _refreshMeshInfo();
+}
+
+// Recompute the "after export" estimate when the model, the output resolution or
+// the presence of a textured layer changes. Debounced: slider drags call this often.
+function _refreshMeshInfo() {
+  clearTimeout(_meshInfoTimer);
+  _meshInfoTimer = setTimeout(() => {
+    if (!currentGeometry || !_meshInfoBase) return;
+    const textured = _hasTexturedLayer();
+    const key = `${textured}|${settings.refineLength}|${settings.maxTriangles}|${_meshInfoBase.triCount}|${_meshInfoBase.sx}|${_meshInfoBase.sy}|${_meshInfoBase.sz}`;
+    if (key === _meshInfoEstimateKey) return;
+    _meshInfoEstimateKey = key;
+    if (!textured) {
+      _meshInfoEstimate = null;
+    } else {
+      if (_meshInfoTriEdgesGeo !== currentGeometry) {
+        _meshInfoTriEdges = computeTriEdges(currentGeometry);
+        _meshInfoTriEdgesGeo = currentGeometry;
+      }
+      // Export subdivides first, then simplifies down to the triangle limit.
+      _meshInfoEstimate = Math.min(simulateFromEdges(_meshInfoTriEdges, settings.refineLength), settings.maxTriangles);
+    }
+    _renderMeshInfo();
+  }, 250);
 }
 const exportBtn        = document.getElementById('export-btn');
 const export3mfBtn     = document.getElementById('export-3mf-btn');
@@ -1668,6 +1726,7 @@ function wireEvents() {
   }
   linkSlider(refineLenSlider, refineLenVal, v => {
     settings.refineLength = v;
+    _refreshMeshInfo();
     checkResolutionWarning();
     // Diagnostic from a previous Smart click no longer matches the new value.
     // (applySmartResolution sets values without dispatching `input`, so this
@@ -1684,7 +1743,7 @@ function wireEvents() {
   refineLenSlider.addEventListener('dblclick', markRefineLengthUserSet);
   refineLenVal.addEventListener('change', markRefineLengthUserSet);
   refineLenVal.addEventListener('wheel', markRefineLengthUserSet);
-  linkSlider(maxTriSlider, maxTriVal, v => { settings.maxTriangles = v; return formatM(v); }, false);
+  linkSlider(maxTriSlider, maxTriVal, v => { settings.maxTriangles = v; _refreshMeshInfo(); return formatM(v); }, false);
   linkSlider(bottomAngleLimitSlider, bottomAngleLimitVal, v => {
     settings.bottomAngleLimit = v; _falloffDirty = true;
     syncSmoothBottomToLimit();
@@ -4600,6 +4659,7 @@ function applySmartResolution() {
   const d = result.diagnostics;
   refineLengthUserSet = true;
   settings.refineLength = result.edge;
+  _refreshMeshInfo();
   refineLenSlider.value = result.edge;
   refineLenVal.value    = result.edge;
   checkResolutionWarning();
@@ -5192,6 +5252,7 @@ function _syncPreviewMaterial() {
 
 function updatePreview() {
   if (!currentGeometry || !currentBounds) return;
+  _refreshMeshInfo();
 
   if (!_hasTexturedLayer()) {
     // No map yet — plain material

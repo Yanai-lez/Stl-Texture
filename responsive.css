@@ -499,3 +499,9 @@ main,
 
   .theme-toggle { white-space: nowrap; }
 }
+
+/* Hebrew (RTL): the language dropdown's arrow sits at the end of the field (left
+   side), so it no longer covers the start of the text. */
+[dir="rtl"] .lang-dropdown {
+  background-position: left 8px center;
+}
