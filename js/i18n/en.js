@@ -267,6 +267,8 @@ export default {
   "progress.done": "Done!",
   "progress.processing": "Processing…",
   "cta.storeDismiss": "Dismiss",
+  "alerts.heavyModel": "This model is very large (about {tris} triangles). Editing it needs roughly {mb} MB of memory, and the browser tab may become very slow or crash.\n\nLoad it anyway? (Simplifying the mesh in your CAD/slicer first is safer.)",
+  "alerts.loadOOM": "The browser ran out of memory while loading this model.\n\nTry a lighter version of the model (fewer triangles), close other tabs, or use a computer with more memory.",
   "alerts.loadFailed": "Could not load model: {msg}",
   "alerts.unsupportedModelType": "“{name}” isn't a supported model file. Use STL, OBJ, 3MF or STEP — or a .bumpmesh project.",
   "alerts.textureLoadFailed": "Couldn't read “{name}” as an image. Use PNG, JPG or WebP — most browsers can't open HEIC or TIFF.",

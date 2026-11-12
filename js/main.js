@@ -4217,6 +4217,22 @@ async function handleModelFile(file, stepSettings = null) {
     openStepDialog(file);
     return;
   }
+  // Heavy-model guard: a binary STL is 50 bytes per triangle, and everything
+  // the editor keeps per triangle (positions, normals, adjacency, paint index,
+  // preview) comes to roughly 400 bytes, so a very large file can take the tab
+  // down. Phones and low-memory machines hit that far sooner. Ask first.
+  if (/\.stl$/i.test(file.name)) {
+    const estTris = Math.round(file.size / 50);
+    const lowMem = (navigator.deviceMemory && navigator.deviceMemory < 4) || matchMedia('(pointer: coarse)').matches;
+    const limit = lowMem ? 1_000_000 : (navigator.deviceMemory >= 8 ? 6_000_000 : 3_000_000);
+    if (estTris > limit) {
+      const ok = confirm(t('alerts.heavyModel', {
+        tris: estTris.toLocaleString(),
+        mb: Math.round(estTris * 400 / 1024 / 1024).toLocaleString(),
+      }));
+      if (!ok) return;
+    }
+  }
   _undoApplyDepth++;
   const mySeq = ++_importSeq;
   if (isStep) {
@@ -4364,7 +4380,8 @@ async function handleModelFile(file, stepSettings = null) {
     // is not a failure — the newer load owns the UI now.
     if (!err || !err.stepCancelled) {
       console.error('Failed to load model:', err);
-      alert(t('alerts.loadFailed', { msg: err.message }));
+      const oom = /alloc|out of memory|invalid (typed )?array length|maximum size|Invalid array buffer/i.test(String(err && err.message));
+      alert(oom ? t('alerts.loadOOM') : t('alerts.loadFailed', { msg: err.message }));
     }
   } finally {
     if (isStep && mySeq === _importSeq) importProgress.classList.add('hidden');

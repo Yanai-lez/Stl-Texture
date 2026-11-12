@@ -43,7 +43,7 @@ export class PaintTree {
    *   positions   Float32Array  base mesh, non-indexed (xyz per corner)
    *   vertId      Uint32Array   welded vertex id per corner (exclusion.js buildAdjacency)
    *   vertCount   number        welded vertex count
-   *   adjacency   Array<Array<{neighbor:number}>>  per base face
+   *   adjacency   CSR { start, nbr, ang } per base face (see buildAdjacency)
    *   faceNormals Float32Array  unit face normal per base face (xyz)
    */
   constructor({ positions, vertId, vertCount, adjacency, faceNormals }) {
@@ -445,10 +445,8 @@ export class PaintTree {
       const d2 = this._triDist2Projected(this.nv[b], this.nv[b + 1], this.nv[b + 2], cx, cy, cz, vx, vy, vz);
       if (d2 > r2) continue;
       touched.push(f);
-      const nbrs = adjacency[f];
-      if (!nbrs) continue;
-      for (let k = 0; k < nbrs.length; k++) {
-        const nb = nbrs[k].neighbor;
+      for (let k = adjacency.start[f], kEnd = adjacency.start[f + 1]; k < kEnd; k++) {
+        const nb = adjacency.nbr[k];
         if (visited.has(nb)) continue;
         visited.add(nb);
         const nbi = nb * 3;

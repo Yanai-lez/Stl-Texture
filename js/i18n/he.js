@@ -140,6 +140,8 @@ export default {
 "progress.done": "הושלם!",
 "progress.processing": "מעבד…",
 "cta.storeDismiss": "סגירה",
+"alerts.heavyModel": "המודל הזה גדול מאוד (בערך {tris} משולשים). העריכה שלו דורשת בערך {mb} MB זיכרון, והלשונית עלולה להיות איטית מאוד או לקרוס.\n\nלטעון בכל זאת? (בטוח יותר לפשט קודם את הרשת ב-CAD או בסלייסר.)",
+"alerts.loadOOM": "נגמר הזיכרון בדפדפן בזמן טעינת המודל.\n\nנסה גרסה קלה יותר של המודל (פחות משולשים), סגור לשוניות אחרות, או השתמש במחשב עם יותר זיכרון.",
 "alerts.loadFailed": "לא ניתן לטעון את המודל: {msg}",
 "alerts.unsupportedModelType": "“{name}” אינו קובץ מודל נתמך. השתמש ב-STL, OBJ, 3MF או STEP — או בפרויקט .bumpmesh.",
 "alerts.textureLoadFailed": "לא ניתן לקרוא את “{name}” כתמונה. השתמש ב-PNG, JPG או WebP — רוב הדפדפנים לא יכולים לפתוח HEIC או TIFF.",
