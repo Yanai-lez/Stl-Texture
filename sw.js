@@ -3,7 +3,7 @@
 // HTTP cache (GitHub Pages allows 10 minutes) can never hand out an old script next to a new
 // page. Mixed versions of index.html and main.js would break every button. The service worker
 // cache is only an offline fallback.
-const VERSION = 'stlt-v2';
+const VERSION = 'stlt-v3';
 const CACHE = VERSION + '-cache';
 
 const PRECACHE = [
@@ -11,8 +11,8 @@ const PRECACHE = [
   'index.html',
   'style.css',
   'responsive.css',
-  'logo.png',
   'manifest.webmanifest',
+  'icons/logo-96.png',
   'icons/favicon-32.png',
   'icons/favicon-48.png',
   'icons/icon-192.png',
