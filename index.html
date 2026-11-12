@@ -131,6 +131,17 @@
           <input type="file" id="stl-file-input" accept=".stl,.obj,.3mf,.step,.stp" hidden />
         </div>
         <canvas id="viewport" role="img" aria-label="3D model preview"></canvas>
+        <div id="zoom-controls" class="zoom-controls" role="group" data-i18n-aria-label="ui.zoomGroup" aria-label="Zoom">
+          <button id="zoom-in-btn" type="button" data-i18n-title="ui.zoomIn" data-i18n-aria-label="ui.zoomIn" title="Zoom in" aria-label="Zoom in">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <button id="zoom-out-btn" type="button" data-i18n-title="ui.zoomOut" data-i18n-aria-label="ui.zoomOut" title="Zoom out" aria-label="Zoom out">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+          </button>
+          <button id="zoom-fit-btn" type="button" data-i18n-title="ui.zoomFit" data-i18n-aria-label="ui.zoomFit" title="Fit model to view" aria-label="Fit model to view">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          </button>
+        </div>
         <div id="brush-cursor"></div>
         <div id="mesh-diagnostics" class="mesh-diagnostics hidden">
           <button id="mesh-diag-dismiss" class="mesh-diag-dismiss" aria-label="Dismiss">&times;</button>

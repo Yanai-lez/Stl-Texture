@@ -11,7 +11,7 @@ import { initViewer, loadGeometry, setMeshMaterial, setMeshGeometry, setWirefram
          clearDiagOverlays, setDiagEdges, addDiagFaces,
          setRotationGizmo, isGizmoDragging, isSoftwareRendering, setTurntable,
          setSectionView, setSectionAxis, flipSection, setSectionHandlesLocked,
-         sectionVisibleHits } from './viewer.js';
+         sectionVisibleHits, zoomBy, fitView } from './viewer.js';
 import { loadModelFile, computeBounds, getTriangleCount }  from './stlLoader.js';
 import { estimateStep } from './stepLoader.js';
 import { resolveStepSettings } from './stepConvert.js';
@@ -1050,6 +1050,26 @@ document.getElementById('app-version').textContent = `v${APP_VERSION}`;
 console.info(`STL Texture v${APP_VERSION}`);
 
 initViewer(canvas);
+
+// On-screen zoom buttons (tap to step, hold to keep zooming) and "fit model to view"
+(function wireZoomButtons() {
+  const hold = (id, factor) => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    let timer = null, repeat = null;
+    const stop = () => { clearTimeout(timer); clearInterval(repeat); timer = repeat = null; };
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      zoomBy(factor);
+      timer = setTimeout(() => { repeat = setInterval(() => zoomBy(Math.pow(factor, 0.35)), 60); }, 350);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
+    btn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zoomBy(factor); } });
+  };
+  hold('zoom-in-btn', 1.35);
+  hold('zoom-out-btn', 1 / 1.35);
+  document.getElementById('zoom-fit-btn')?.addEventListener('click', () => fitView());
+})();
 
 // A CPU-rendered viewer runs at a few fps and just looks broken — say why (#75).
 if (isSoftwareRendering()) {

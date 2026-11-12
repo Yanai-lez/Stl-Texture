@@ -263,30 +263,10 @@ export function initViewer(canvas) {
     const rect = renderer.domElement.getBoundingClientRect();
     const ndcX =  ((e.clientX - rect.left) / rect.width)  * 2 - 1;
     const ndcY = -((e.clientY - rect.top)  / rect.height) * 2 + 1;
-
-    if (_isPerspective) {
-      // Perspective: dolly camera toward/away from point under cursor
-      const factor = e.deltaY > 0 ? 0.9 : 1.1;
-      _tmpV1.set(ndcX, ndcY, 0.5).unproject(camera);
-      _tmpV1.sub(camera.position).normalize();
-      const dist = camera.position.distanceTo(controls.target);
-      const dolly = dist * (1 - 1 / factor);
-      camera.position.addScaledVector(_tmpV1, dolly);
-      controls.target.addScaledVector(_tmpV1, dolly);
-      controls.update();
-    } else {
-      // Orthographic: cursor-centric zoom via frustum zoom
-      _tmpV1.set(ndcX, ndcY, 0).unproject(camera);
-      const factor = e.deltaY > 0 ? 1 / 1.1 : 1.1;
-      camera.zoom = Math.max(0.05, Math.min(200, camera.zoom * factor));
-      camera.updateProjectionMatrix();
-      _tmpV2.set(ndcX, ndcY, 0).unproject(camera);
-      _tmpV1.sub(_tmpV2);
-      camera.position.add(_tmpV1);
-      controls.target.add(_tmpV1);
-      controls.update();
-    }
+    _zoomAt(e.deltaY > 0 ? (_isPerspective ? 0.9 : 1 / 1.1) : 1.1, ndcX, ndcY);
   }, { passive: false });
+
+  _initPinchZoom(renderer.domElement);
 
   // Resize observer
   const resizeObserver = new ResizeObserver(() => onResize());
@@ -672,7 +652,76 @@ export function setMeshGeometry(geometry) {
  */
 export function getGrid() { return grid; }
 
+// Zoom by `factor` (>1 = closer) toward a point of the view given in normalised device
+// coordinates (-1..1). Shared by the mouse wheel, the on-screen zoom buttons and pinch.
+function _zoomAt(factor, ndcX = 0, ndcY = 0) {
+  if (!camera || !controls) return;
+  if (_isPerspective) {
+    // Perspective: dolly the camera toward/away from the point under the cursor
+    _tmpV1.set(ndcX, ndcY, 0.5).unproject(camera);
+    _tmpV1.sub(camera.position).normalize();
+    const dist = camera.position.distanceTo(controls.target);
+    const dolly = dist * (1 - 1 / factor);
+    camera.position.addScaledVector(_tmpV1, dolly);
+    controls.target.addScaledVector(_tmpV1, dolly);
+  } else {
+    // Orthographic: cursor-centric zoom via frustum zoom
+    _tmpV1.set(ndcX, ndcY, 0).unproject(camera);
+    camera.zoom = Math.max(0.05, Math.min(200, camera.zoom * factor));
+    camera.updateProjectionMatrix();
+    _tmpV2.set(ndcX, ndcY, 0).unproject(camera);
+    _tmpV1.sub(_tmpV2);
+    camera.position.add(_tmpV1);
+    controls.target.add(_tmpV1);
+  }
+  controls.update();
+  _needsRender = true;
+}
+
+/** On-screen zoom buttons: zoom toward the centre of the view (factor > 1 = closer). */
+export function zoomBy(factor) { _zoomAt(factor, 0, 0); }
+
+/** Frame the whole model again (the same view as right after loading it). */
+export function fitView() {
+  if (!_lastSphere) return;
+  fitCamera(_lastSphere.clone());
+  _needsRender = true;
+}
+
+// Pinch-to-zoom on touch screens (OrbitControls' own zoom is off, see enableZoom above).
+function _initPinchZoom(el) {
+  const pts = new Map();
+  let lastDist = 0;
+  const dist = () => { const [a, b] = [...pts.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+  el.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'touch') return;
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pts.size === 2) lastDist = dist();
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pts.size !== 2) return;
+    const d = dist();
+    if (lastDist > 0 && d > 0) {
+      const [a, b] = [...pts.values()];
+      const rect = el.getBoundingClientRect();
+      const ndcX =  (((a.x + b.x) / 2 - rect.left) / rect.width)  * 2 - 1;
+      const ndcY = -(((a.y + b.y) / 2 - rect.top)  / rect.height) * 2 + 1;
+      _zoomAt(Math.max(0.8, Math.min(1.25, d / lastDist)), ndcX, ndcY);
+    }
+    lastDist = d;
+  });
+  const up = (e) => { pts.delete(e.pointerId); lastDist = pts.size === 2 ? dist() : 0; };
+  el.addEventListener('pointerup', up);
+  el.addEventListener('pointercancel', up);
+}
+
+
+let _lastSphere = null;
+
 function fitCamera(sphere) {
+  _lastSphere = sphere.clone();
   const sz = renderer.getSize(new THREE.Vector2());
   const aspect = sz.x / sz.y;
   const halfH = sphere.radius * 1.4;
