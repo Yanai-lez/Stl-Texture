@@ -1,7 +1,9 @@
 // Service worker: makes the app installable and usable offline after the first visit.
-// Same-origin files are fetched network-first, so a new deploy always wins over the cache
-// and an old cached script can never override the current code. The cache is only a fallback.
-const VERSION = 'stlt-v1';
+// Same-origin files are fetched network-first and with cache:'no-cache', so the browser's own
+// HTTP cache (GitHub Pages allows 10 minutes) can never hand out an old script next to a new
+// page. Mixed versions of index.html and main.js would break every button. The service worker
+// cache is only an offline fallback.
+const VERSION = 'stlt-v2';
 const CACHE = VERSION + '-cache';
 
 const PRECACHE = [
@@ -11,7 +13,6 @@ const PRECACHE = [
   'responsive.css',
   'logo.png',
   'manifest.webmanifest',
-  'icons/logo-96.png',
   'icons/favicon-32.png',
   'icons/favicon-48.png',
   'icons/icon-192.png',
@@ -78,7 +79,14 @@ self.addEventListener('activate', (event) => {
 async function networkFirst(request) {
   const cache = await caches.open(CACHE);
   try {
-    const res = await fetch(request);
+    // A navigation Request cannot be re-used with extra options (Chrome throws), so build a
+    // fresh same-origin request that always revalidates with the server.
+    const fresh = new Request(request.url, {
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      mode: request.mode === 'navigate' ? 'same-origin' : request.mode,
+    });
+    const res = await fetch(fresh);
     if (res.ok && res.status === 200) cache.put(request, res.clone());
     return res;
   } catch (err) {
