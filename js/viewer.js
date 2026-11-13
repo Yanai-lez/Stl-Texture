@@ -253,6 +253,20 @@ export function initViewer(canvas) {
   // The previous custom surface-pivot orbit implementation has been removed.
   controls.enableRotate = true;
 
+  // Orbit around the model, not around wherever zooming left the pivot: when a
+  // rotate gesture starts, put the pivot on the view axis at the model's depth
+  // (the view itself doesn't change).
+  renderer.domElement.addEventListener('pointerdown', (e) => {
+    if (!_lastSphere || e.button !== 0) return;
+    if (e.pointerType === 'touch' && !e.isPrimary) return;
+    camera.getWorldDirection(_tmpV2);
+    _tmpV1.copy(_lastSphere.center).sub(camera.position);
+    const depth = _tmpV1.dot(_tmpV2);
+    if (depth > _lastSphere.radius * 0.05) {
+      controls.target.copy(camera.position).addScaledVector(_tmpV2, depth);
+    }
+  });
+
   // Cursor-centric zoom: zoom toward the mouse pointer instead of screen centre
   renderer.domElement.addEventListener('wheel', (e) => {
     e.preventDefault();
@@ -661,9 +675,17 @@ function _zoomAt(factor, ndcX = 0, ndcY = 0) {
     _tmpV1.set(ndcX, ndcY, 0.5).unproject(camera);
     _tmpV1.sub(camera.position).normalize();
     const dist = camera.position.distanceTo(controls.target);
+    // Keep a sane range: not through the model, not lost in the distance.
+    const r = _lastSphere ? _lastSphere.radius : 50;
+    const newDist = dist / factor;
+    if (newDist < r * 0.1 || newDist > r * 60) return;
     const dolly = dist * (1 - 1 / factor);
     camera.position.addScaledVector(_tmpV1, dolly);
-    controls.target.addScaledVector(_tmpV1, dolly);
+    // The orbit pivot stays on the view axis and gets closer/farther with the
+    // camera. Moving it along with the camera kept its distance fixed, so
+    // zooming in never got closer and flew through the model.
+    camera.getWorldDirection(_tmpV2);
+    controls.target.copy(camera.position).addScaledVector(_tmpV2, newDist);
   } else {
     // Orthographic: cursor-centric zoom via frustum zoom
     _tmpV1.set(ndcX, ndcY, 0).unproject(camera);
