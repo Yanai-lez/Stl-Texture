@@ -228,10 +228,6 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3v14m0 0l-5-5m5 5l5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             <span data-i18n="ui.placeOnFace">Place on Face</span>
           </button>
-          <button id="rotate-btn" class="place-on-face-btn" data-i18n-title="ui.rotateTitle" title="Manually rotate the model around X, Y, Z axes">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0 1 14.5-4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20 12a8 8 0 0 1-14.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18.5 3v4.5H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 21v-4.5H10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span data-i18n="ui.rotate">Rotate</span>
-          </button>
         </div>
         <div id="import-progress" class="export-progress hidden" style="margin-top:10px;margin-bottom:0;">
           <div class="export-progress-track">
@@ -240,7 +236,8 @@
           </div>
           <span id="import-progress-label" data-i18n="progress.stepTessellate">Tessellating STEP model…</span>
         </div>
-        <div id="rotate-controls" class="rotate-controls hidden">
+        <!-- Rotate tool removed from the UI; this panel stays hidden (main.js still refers to its inputs). -->
+        <div id="rotate-controls" class="rotate-controls hidden" hidden>
           <div class="rotate-inputs-row">
             <div class="rotate-input-group">
               <label for="rotate-x">X°</label>
