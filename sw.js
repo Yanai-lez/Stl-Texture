@@ -35,6 +35,7 @@ const PRECACHE = [
   'js/outlineWrap.js',
   'js/outlineWrapWorker.js',
   'js/paintTree.js',
+  'js/placeOnFace.js',
   'js/presetTextures.js',
   'js/previewMaterial.js',
   'js/previewPipeline.js',

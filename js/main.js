@@ -31,6 +31,7 @@ import { buildAdjacency, bucketFill,
          buildExclusionOverlayGeo, buildFaceWeights } from './exclusion.js';
 import { buildSoftExclusion, softPaintedFaces } from './softMask.js';
 import { PaintTree } from './paintTree.js';
+import { findSupportFaces } from './placeOnFace.js';
 import { runFastDiagnostics, runExpensiveDiagnostics,
          getEdgePositions } from './meshValidation.js';
 import { t, tHtml, initLang, setLang, getLang, applyTranslations, TRANSLATIONS } from './i18n.js';
@@ -95,6 +96,7 @@ let selectionMode      = false;       // false = exclude painted faces; true = i
 let maskModeChosen     = false;       // false until the user (or a loaded/seeded mask) engages surface masking — neither mode button is highlighted
 let _lastHoverTriIdx   = -1;          // last triangle index used for hover preview
 let _lastHoverKey      = '';          // Standard circle brush: erase flag + faces of the last hover preview
+let _pofSupport        = null;        // { regions, triRegion } of the faces the model can rest on
 let placeOnFaceActive  = false;       // true while "Place on Face" mode is active
 let stampPlaceActive   = false;       // true while the next click on the model places the stamp
 let _stampDragging     = false;       // true from a stamp press until release (the stamp follows the cursor)
@@ -3494,6 +3496,18 @@ function togglePlaceOnFace(active) {
   document.getElementById('place-on-face-hint')?.classList.toggle('hidden', !active);
   setSectionHandlesLocked(!!exclusionTool || active);
 
+  clearDiagHighlight();
+  _pofSupport = null;
+  if (active && currentGeometry && triangleAdjacency) {
+    // Highlight every flat face the model can lie on; clicking one puts it down.
+    try {
+      _pofSupport = findSupportFaces(currentGeometry.attributes.position.array, triangleAdjacency, triangleFaceNormals);
+      for (const r of _pofSupport.regions) {
+        addDiagFaces(buildExclusionOverlayGeo(currentGeometry, new Set(r.tris)), 0x2ecc71, 0.5);
+      }
+    } catch (err) { console.warn('Place on Face: could not analyse the model', err); }
+  }
+
   if (active) {
     // Deactivate exclusion tool
     if (exclusionTool) setExclusionTool(null);
@@ -3522,6 +3536,12 @@ function updatePlaceOnFaceHover(e) {
   }
   if (triIdx === _lastHoverTriIdx) return;
   _lastHoverTriIdx = triIdx;
+  if (_pofSupport) {
+    const rid = _pofSupport.triRegion[triIdx];
+    canvas.style.cursor = rid >= 0 ? 'pointer' : 'not-allowed';
+    setHoverPreview(rid >= 0 ? buildExclusionOverlayGeo(currentGeometry, new Set(_pofSupport.regions[rid].tris)) : null, 0xff9900);
+    return;
+  }
   setHoverPreview(buildExclusionOverlayGeo(currentGeometry, new Set([triIdx])));
 }
 
@@ -3533,8 +3553,17 @@ function handlePlaceOnFaceClick(e) {
   const hit = getFrontFaceHit(hits, mesh);
   if (!hit) return;
 
-  // Get the face normal (mesh has identity transform)
-  const faceNormal = hit.face.normal.clone().normalize();
+  // Only faces the model can rest on are accepted; use that face's whole-region normal.
+  let faceNormal;
+  if (_pofSupport) {
+    let ti = hit.faceIndex;
+    if (dispPreviewGeometry && mesh.geometry === dispPreviewGeometry && dispPreviewParentMap) ti = dispPreviewParentMap[ti];
+    const rid = _pofSupport.triRegion[ti];
+    if (rid < 0) return;   // not a face it can lie on: ignore, stay in the mode
+    faceNormal = new THREE.Vector3(...(_pofSupport.regions[rid].normal));
+  } else {
+    faceNormal = hit.face.normal.clone().normalize();   // (mesh has identity transform)
+  }
 
   // Compute quaternion that rotates faceNormal to -Z (face down on print bed)
   const targetDir = new THREE.Vector3(0, 0, -1);
