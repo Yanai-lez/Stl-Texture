@@ -500,3 +500,10 @@ main,
 [dir="rtl"] .lang-dropdown {
   background-position: left 8px center;
 }
+
+/* Hebrew/RTL: the dropdown arrow moves to the left, and the text keeps clear of it. */
+[dir="rtl"] .form-row select {
+  background-position: left 8px center;
+  padding-left: 26px;
+  padding-right: 8px;
+}
