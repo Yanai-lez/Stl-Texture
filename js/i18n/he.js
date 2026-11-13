@@ -88,6 +88,7 @@ export default {
 "tooltips.symmetricDisplacement": "כשהאפשרות פעילה, אפור 50% = ללא עיוות; לבן דוחף החוצה, ושחור דוחף פנימה. שומר על נפח החלק בערך קבוע.",
 "labels.displacementPreview": "תצוגה מקדימה תלת־ממדית ⓘ",
 "tooltips.displacementPreview": "מעדן את הרשת ומזיז קודקודים בזמן אמת כדי שתוכל להעריך את העומק בפועל. עמוס על כרטיס המסך במודלים מורכבים.",
+"ui.placeOnFaceHint": "עכשיו לחץ על הפאה של המודל שצריכה לשבת על משטח ההדפסה.",
 "ui.placeOnFaceTitle": "לחץ על פאה כדי להפנות אותה כלפי מטה אל משטח ההדפסה",
 "ui.rotateTitle": "סיבוב ידני של המודל סביב הצירים X, Y, Z",
 "progress.subdividingPreview": "מכין תצוגה מקדימה…",

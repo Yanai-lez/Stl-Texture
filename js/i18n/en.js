@@ -190,6 +190,7 @@ export default {
   "labels.displacementPreview": "3D Preview ⓘ",
   "tooltips.displacementPreview": "Subdivides the mesh and displaces vertices in real-time so you can judge the actual depth. GPU-intensive on complex models.",
   "ui.placeOnFace": "Place on Face",
+  "ui.placeOnFaceHint": "Now tap the face of the model that should sit on the print bed.",
   "ui.placeOnFaceTitle": "Click a face to orient it downward onto the print bed",
   "ui.rotate": "Rotate",
   "ui.rotateTitle": "Manually rotate the model around X, Y, Z axes",

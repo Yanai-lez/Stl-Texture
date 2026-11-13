@@ -176,10 +176,6 @@
         </div>
 </div>
       <div id="viewport-footer">
-        <label class="wireframe-toggle">
-          <input type="checkbox" id="projection-toggle" />
-          <span data-i18n="ui.perspective">Perspective View</span>
-        </label>
         <!-- SpaceMouse speed and reversed axes (js/spaceMousePanel.js); shown once a puck has been seen in this browser -->
         <div id="spacemouse-wrap" class="spacemouse-wrap hidden">
           <button type="button" id="spacemouse-btn" class="spacemouse-btn" aria-expanded="false" aria-controls="spacemouse-panel"
@@ -229,6 +225,7 @@
             <span data-i18n="ui.placeOnFace">Place on Face</span>
           </button>
         </div>
+        <p id="place-on-face-hint" class="advanced-blurb hidden" data-i18n="ui.placeOnFaceHint">Now tap the face of the model that should sit on the print bed.</p>
         <div id="import-progress" class="export-progress hidden" style="margin-top:10px;margin-bottom:0;">
           <div class="export-progress-track">
             <div id="import-progress-bar" class="export-progress-bar"></div>

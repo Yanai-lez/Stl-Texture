@@ -364,7 +364,6 @@ const bakeProgPct      = document.getElementById('bake-progress-pct');
 const bakeProgLbl      = document.getElementById('bake-progress-label');
 const advancedSection  = document.getElementById('advanced-section');
 const advancedToggle   = document.getElementById('advanced-toggle');
-const projectionToggle = document.getElementById('projection-toggle');
 const placeOnFaceBtn   = document.getElementById('place-on-face-btn');
 const rotateBtn        = document.getElementById('rotate-btn') || document.createElement('button'); // button removed from the UI; detached stand-in keeps old references safe
 const rotateControls   = document.getElementById('rotate-controls');
@@ -1812,8 +1811,8 @@ function wireEvents() {
   // ── Texture layers ──
   if (layerAddBtn) layerAddBtn.addEventListener('click', _addLayer);
 
-  // ── Projection toggle ──
-  projectionToggle.addEventListener('change', () => setProjection(projectionToggle.checked));
+  // Perspective view is always on (the toggle was removed).
+  setProjection(true);
 
   // ── Exclusion tool wiring ─────────────────────────────────────────────────
 
@@ -3492,6 +3491,7 @@ function _endStampDrag() {
 function togglePlaceOnFace(active) {
   placeOnFaceActive = active;
   placeOnFaceBtn.classList.toggle('active', active);
+  document.getElementById('place-on-face-hint')?.classList.toggle('hidden', !active);
   setSectionHandlesLocked(!!exclusionTool || active);
 
   if (active) {
